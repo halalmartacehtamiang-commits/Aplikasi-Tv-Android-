@@ -44,7 +44,12 @@ APP_NAME = "halalmart-signage"
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("halalmart")
 
-app = FastAPI(title="HalalMart Digital Signage API")
+app = FastAPI(
+    title="HalalMart Digital Signage API",
+    docs_url="/api/docs",
+    openapi_url="/api/openapi.json",
+    redoc_url="/api/redoc",
+)
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer(auto_error=False)
 

@@ -85,29 +85,46 @@ The admin account is seeded automatically on startup.
 
 ---
 
-## Production Deployment (Ubuntu VPS + Docker)
+## Deployment
 
-1. Point your domain's A record to the VPS.
-2. Edit `nginx/nginx.conf` — replace `your-domain.com`.
-3. Set `REACT_APP_BACKEND_URL=https://your-domain.com` in the environment.
-4. Obtain certificates (first run), then start the stack:
+### Option A — Quick deploy without a domain (HTTP, IP-based) ⭐ one command
+
+On your Ubuntu VPS:
 
 ```bash
-# Issue Let's Encrypt certificate
-docker compose run --rm certbot certonly --webroot -w /var/www/certbot -d your-domain.com
-
-# Start everything
-docker compose up -d --build
+git clone https://github.com/halalmartacehtamiang-commits/Aplikasi-Tv-Android-.git
+cd Aplikasi-Tv-Android-
+chmod +x deploy.sh
+./deploy.sh                 # auto-detects the server public IP
+# or: ./deploy.sh 187.77.115.222
 ```
 
-The stack:
-- `mongo` — database (persistent volume)
-- `backend` — FastAPI on :8001
-- `frontend` — static React build served by Nginx
-- `nginx` — reverse proxy, HTTPS, WebSocket upgrade
-- `certbot` — automatic certificate renewal
+`deploy.sh` will: install Docker (if missing) → generate `backend/.env` (random JWT secret + admin login) → set the frontend backend URL to `http://<your-ip>` → build and start everything.
 
-Nginx proxies `/api/*` (including `/api/ws/*` WebSockets) to the backend and everything else to the frontend.
+After it finishes:
+- Admin dashboard: `http://<your-ip>/login`
+- TV display:      `http://<your-ip>/display/<TV_ID>`
+- API docs:        `http://<your-ip>/api/docs`
+- Login:           `admin@halalmart.com` / `Halal@2026` (change `ADMIN_PASSWORD` in `backend/.env` then re-run `./deploy.sh`)
+
+Useful commands: `docker compose ps`, `docker compose logs -f backend`, `docker compose down`.
+
+> Note: HTTP/IP mode is perfect for a quick start on a LAN or a single kiosk. Because it is not HTTPS, use it on a trusted network. When you get a domain, switch to Option B for HTTPS.
+
+### Option B — Production with a domain + HTTPS (Let's Encrypt)
+
+1. Point your domain's A record to the VPS IP.
+2. Edit `nginx/nginx.conf` — replace `your-domain.com`.
+3. Issue the certificate, then launch the HTTPS stack:
+
+```bash
+export REACT_APP_BACKEND_URL=https://your-domain.com
+docker compose -f docker-compose.https.yml run --rm certbot certonly \
+    --webroot -w /var/www/certbot -d your-domain.com
+docker compose -f docker-compose.https.yml up -d --build
+```
+
+The HTTPS stack adds `certbot` (auto-renewal) and serves on 80/443. Nginx proxies `/api/*` (including `/api/ws/*` WebSockets) to the backend and everything else to the frontend.
 
 ---
 
