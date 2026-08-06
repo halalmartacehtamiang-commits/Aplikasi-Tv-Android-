@@ -1,0 +1,18 @@
+{
+  "short_name": "HalalMart Signage",
+  "name": "HalalMart Digital Signage",
+  "description": "Digital signage control center for HalalMart Android TV displays",
+  "start_url": "/admin",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#FF5F1F",
+  "background_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}
