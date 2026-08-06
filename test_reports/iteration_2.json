@@ -1,0 +1,20 @@
+{
+  "summary": "Re-test after AxiosError 404 bug fix. Backend 10/10 pytest pass. Frontend end-to-end verified: login -> register TV -> open /display/{tvId} renders tv-display with NO 404/502 and NO console/page errors; TV goes ONLINE in admin table (WS connect + 8s poll refresh confirmed); unregistered TV shows friendly 'This TV is not registered' message and tv-display is NOT rendered; realtime WebSocket 'reload' on Settings save triggers display refetch (observed /api/display GETs increase). The service worker cache fix (only cache 200 media, hm-signage-v2) and Display.js transient error handling (only 404 fatal, 5xx retries with cache) are working as intended.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": ["/app/backend/tests/test_halalmart_api.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Backend GET /api/display serves settings including the mongo internal 'key':'global' field (harmless but leaks internal key).",
+    "server.py uses on_event startup/shutdown (deprecated in FastAPI). Consider lifespan handlers.",
+    "ADMIN_PASSWORD fallback 'admin123' exists in code but env supplies Halal@2026; ensure this fallback stays out of production."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "admin@halalmart.com / Halal@2026 (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "Test-created TVs prefixed TEST_ were cleaned up via API DELETE after test run.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Bug is fixed. Register-TV -> open-display -> ONLINE flow works end-to-end with zero console errors. Unregistered TV -> friendly message. Realtime reload via WS works. Service worker v2 no longer caches transient error responses. Only 404 on unregistered TV is expected (surfaces friendly message). Use REACT_APP_BACKEND_URL from frontend/.env.",
+  "rca of the issue": "Original AxiosError 404 root causes: (1) service worker v1 was caching transient 404/502 responses and serving them thereafter, (2) Display.js treated any error as fatal. Fixes verified: sw.js only caches ok media (cache bumped to hm-signage-v2), Display.js now treats only HTTP 404 as fatal and retries transient 5xx/network every 5s using cached content. Reproduction of the failure is no longer possible in current build."
+}

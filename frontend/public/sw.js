@@ -1,5 +1,5 @@
 // Basic offline-first service worker for HalalMart Digital Signage
-const CACHE = "hm-signage-v1";
+const CACHE = "hm-signage-v2";
 
 self.addEventListener("install", (e) => {
   self.skipWaiting();
@@ -22,7 +22,10 @@ self.addEventListener("fetch", (e) => {
         if (cached) return cached;
         try {
           const resp = await fetch(e.request);
-          cache.put(e.request, resp.clone());
+          // Only cache successful responses — never cache 404/502/error responses
+          if (resp && resp.ok && resp.status === 200) {
+            cache.put(e.request, resp.clone());
+          }
           return resp;
         } catch (err) {
           return cached || Response.error();

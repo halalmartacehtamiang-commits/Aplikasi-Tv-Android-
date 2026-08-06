@@ -23,13 +23,19 @@ export default function Display() {
       setError("");
       localStorage.setItem(CACHE_KEY(tvId), JSON.stringify(d));
     } catch (e) {
+      const status = e.response?.status;
       const cached = localStorage.getItem(CACHE_KEY(tvId));
-      if (cached) {
-        setData(JSON.parse(cached));
-      } else if (e.response?.status === 404) {
+      if (status === 404) {
+        // Confirmed: this TV id does not exist. Only fatal case.
         setError("This TV is not registered. Register it in the admin panel.");
+      } else if (cached) {
+        // Transient error (502/5xx/network) -> keep showing cached content, retry later.
+        setData(JSON.parse(cached));
+        setError("");
+        setTimeout(fetchContent, 5000);
       } else {
-        setError("Unable to load content.");
+        // No cache yet and transient failure -> keep retrying, no fatal error.
+        setTimeout(fetchContent, 5000);
       }
     }
   }, [tvId]);

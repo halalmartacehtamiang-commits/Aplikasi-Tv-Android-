@@ -23,8 +23,12 @@ export default function TVs() {
   const [form, setForm] = useState(empty);
 
   const load = async () => {
-    const { data } = await api.get("/tvs");
-    setTvs(data);
+    try {
+      const { data } = await api.get("/tvs");
+      setTvs(data);
+    } catch (e) {
+      /* transient network/reload error — keep last values */
+    }
   };
   useEffect(() => {
     load();

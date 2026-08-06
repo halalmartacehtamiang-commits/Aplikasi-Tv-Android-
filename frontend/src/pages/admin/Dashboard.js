@@ -29,9 +29,13 @@ export default function Dashboard() {
   const [logs, setLogs] = useState([]);
 
   const load = async () => {
-    const [s, l] = await Promise.all([api.get("/dashboard/stats"), api.get("/logs")]);
-    setStats(s.data);
-    setLogs(l.data.slice(0, 8));
+    try {
+      const [s, l] = await Promise.all([api.get("/dashboard/stats"), api.get("/logs")]);
+      setStats(s.data);
+      setLogs(l.data.slice(0, 8));
+    } catch (e) {
+      /* transient network/reload error — keep last values */
+    }
   };
 
   useEffect(() => {
