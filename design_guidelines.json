@@ -1,0 +1,131 @@
+{
+  "theme_strategy": {
+    "mode": "dark",
+    "rationale": "Matches modern retail digital signage admin panels, reduces eye strain for store managers, and makes neon orange/green accents pop."
+  },
+  "typography": {
+    "fonts": {
+      "headings": "Manrope, sans-serif",
+      "body": "Inter, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tight font-bold",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-semibold",
+      "h3": "text-xl sm:text-2xl font-semibold",
+      "h4": "text-lg sm:text-xl font-medium",
+      "body": "text-base leading-relaxed",
+      "small": "text-sm text-muted-foreground",
+      "ticker": "text-4xl md:text-5xl font-bold tracking-tight uppercase"
+    },
+    "rules": [
+      "Avoid Inter for headings, use Manrope for a modern retail/technical look.",
+      "Ensure tight tracking for large headings.",
+      "Overlines and labels must be uppercase, tiny, and wide spacing."
+    ]
+  },
+  "colors": {
+    "archetype": "Tactical Retail / The Performance Pro",
+    "palette": {
+      "background": "0 0% 4%",
+      "foreground": "0 0% 98%",
+      "card": "0 0% 8%",
+      "card_foreground": "0 0% 98%",
+      "primary": "17 100% 56%",
+      "primary_foreground": "0 0% 9%",
+      "accent": "160 84% 39%",
+      "accent_foreground": "0 0% 98%",
+      "destructive": "0 84% 60%",
+      "destructive_foreground": "0 0% 98%",
+      "border": "0 0% 15%",
+      "input": "0 0% 15%",
+      "ring": "17 100% 56%"
+    },
+    "guidelines": [
+      "Use Electric Orange (#FF5F1F) as the primary CTA and active state indicator.",
+      "Use Mint Green (#10B981) exclusively for 'Online' status, success states, and positive analytics trends.",
+      "Maintain a deep obsidian background, avoiding pure black. Never use pure #000000."
+    ]
+  },
+  "layouts": {
+    "admin_dashboard": {
+      "grid": "Bento Grid Mode B (High Density). grid-cols-1 md:grid-cols-4 gap-6",
+      "spacing": "Generous internal padding for cards (p-6 or p-8)",
+      "surface": "Flat Solid surfaces with 1px subtle borders. Avoid soft UI shadows."
+    },
+    "tv_display": {
+      "mode": "Fullscreen, immersive, absolute positioning, no-scroll.",
+      "z_index": {
+        "z-0": "Media Slider (Images/Videos)",
+        "z-10": "Gradient overlay at bottom (bg-gradient-to-t from-black/90 via-black/50 to-transparent)",
+        "z-20": "Clock (Top Right), Logo (Top Left)",
+        "z-30": "Running Text Ticker (Bottom, react-fast-marquee)"
+      }
+    }
+  },
+  "motion": {
+    "admin": "Micro-interactions: Hover states (-translate-y-1), subtle shadows, and staggered entrance animations for grid items.",
+    "tv_display": "Smooth crossfade between media items using Framer Motion. Subtle Ken Burns scale effect (1.0 to 1.05) on images over duration.",
+    "rules": "Disable or reduce motion based on prefers-reduced-motion media query."
+  },
+  "components": {
+    "cards": "Cardless or sharp rectangular styles. Use 1px borders.",
+    "buttons": "Sharp or slightly rounded rectangles. Hover state must lighten color.",
+    "tables": "Dense, high-contrast rows. Explicit status dots (Green = Online, Red = Offline).",
+    "ticker": "react-fast-marquee component.",
+    "icons": "lucide-react for standard icons, use size 20px-24px.",
+    "toast": "sonner"
+  },
+  "accessibility": {
+    "contrast": "Ensure minimum 4.5:1 ratio for normal text. Use APCA guidelines.",
+    "focus": "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    "testing": "All interactive elements MUST have data-testid attributes."
+  },
+  "image_urls": [
+    {
+      "url": "https://images.pexels.com/photos/37321079/pexels-photo-37321079.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description": "Colorful fresh vegetables",
+      "category": "tv_media_placeholder_1"
+    },
+    {
+      "url": "https://images.pexels.com/photos/36096911/pexels-photo-36096911.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description": "Close up tomatoes",
+      "category": "tv_media_placeholder_2"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1685640206182-c51b8aa9b686?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzR8MHwxfHNlYXJjaHwyfHxyZXRhaWwlMjBsaWZlc3R5bGUlMjBzaG9wcGluZyUyMGNhcnR8ZW58MHx8fHwxNzgzNjIxNzUxfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Person pushing shopping cart",
+      "category": "admin_placeholder"
+    }
+  ],
+  "instructions_to_main_agent": [
+    "1. Multi-view Application: Establish React Router early to distinguish /admin (Dashboard) and /display (TV Signage).",
+    "2. TV Display Restrictions: The /display route MUST have 'cursor-none', 'h-screen w-screen', 'overflow-hidden'. There should be absolutely no scrollbars or navigation here.",
+    "3. TV Display Layers: Implement absolute positioning for the ticker (bottom) and clock/logo (top) over the media player.",
+    "4. Ticker: Install and use 'react-fast-marquee' for the running text. Ensure its container has a heavy dark gradient behind it so text is readable against bright images.",
+    "5. Theme: Apply the dark mode HSL variables strictly. Set primary to Electric Orange and accent/success to Mint Green.",
+    "6. TV Display Media: Build a slideshow that loops through images/videos. Use framer-motion (AnimatePresence) for smooth crossfades. If video, trigger play() automatically.",
+    "7. Admin Dashboard: Build a responsive Bento grid for the main overview (Stat cards for Online/Offline). Use Shadcn tables for TV Management.",
+    "8. Media Manager: Build a grid for uploaded assets. Use the placeholder image URLs provided.",
+    "9. Playlist Builder: Needs drag-and-drop or simple up/down arrow reordering with duration inputs.",
+    "10. Component UI: Use Shadcn components (Dialog, Table, Select) for admin forms.",
+    "11. Never use fully transparent backgrounds for UI surfaces; use Glassmorphism for floating admin panels or solid #141414 for cards.",
+    "12. File extensions: Use .js and .jsx, NOT .tsx (unless the project is specifically configured for TSX)."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "You tend to converge toward generic, 'on distribution' outputs. Avoid the 'AI slop' aesthetic. Make creative, distinctive frontends.",
+    "DO NOT use dark colors as gradients.",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy.",
+    "Use glass-morphism effects with backdrop filters (12-24px blur) where appropriate (e.g., sticky headers).",
+    "You MUST NOT apply universal transition. Eg: transition: all. Always add transitions for specific interactive elements.",
+    "You MUST NOT center align the app container. Do not add text-align: center to the root CSS.",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style.",
+    "NEVER use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Main agent relies on provided image URLs. NEVER use placeholder text/URLs like via.placeholder.com.",
+    "Prioritize using pre-existing components from src/components/ui when applicable.",
+    "Use sonner for toast notifications."
+  ]
+}
