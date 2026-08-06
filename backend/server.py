@@ -180,6 +180,7 @@ def now_iso() -> str:
 
 def clean(doc: dict) -> dict:
     doc.pop("_id", None)
+    doc.pop("key", None)
     return doc
 
 
